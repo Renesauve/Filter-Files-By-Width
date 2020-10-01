@@ -1,52 +1,57 @@
+const fs = require("fs");
+const {parse} = require("json2csv");
 
-const fs = require('fs');
+// const path = require("path");
+// const process = require("process");
 
-const path = require('path')
-const process = require("process");
-
-const glob = require('glob');
-const folderPath = "C:/Users/RenéS/Electron Metalworks Ltd/EMW HQ - __Website Cut Files"
-
+// const glob = require("glob");
 // Loop through all the files in the temp directory
-fs.readdir(folderPath, function (err, files) {
+const cheerio = require("cheerio");
 
- files.forEach(function (file, index) {
-    // Make one pass and make the file complete
-    
-    const newFolderPath = "C:/Users/RenéS/Electron Metalworks Ltd/EMW HQ - __Website Cut Files/" + file
-    // glob(newFolderPath + '/**/*.svg', function (er, files) {
-    // })
-    fs.readdir(newFolderPath, function (err, subfiles) {
-      if (subfiles == undefined) {
-        console.log("poop")
-      } else {
-      subfiles.forEach(function (subfile, index) {
-        function readContent(callback) {
-          fs.readFile(`${newFolderPath}` + "/" + `${subfile}`,'utf8', function (err, content) {
-              if (err) return callback(err)
-              callback(null, content)
-            
-          })
+const folderPath = "C:/Users/rdasa/Desktop/coins/";
+
+fs.readdir(folderPath, {encoding: "utf8", withFileTypes: true}, function (
+  err,
+  files
+) {
+  Promise.all(
+    files.map(async (file, index) => {
+      if (file.isFile()) {
+        return new Promise((resolve, reject) => {
+          function readContent(callback) {
+            fs.readFile(
+              `${folderPath}` + "/" + `${file.name}`,
+              "utf8",
+              function (err, content) {
+                if (err) reject(err);
+                callback(null, content);
+              }
+            );
+          }
+
+          readContent(function (err, content) {
+            const $ = cheerio.load(content);
+            // console.log(file);
+
+            const svg = $(`svg`);
+            const fileData = {
+              filename: file.name,
+              width: svg.attr("width"),
+              height: svg.attr("height"),
+              docname: svg.attr("sodipodi:docname"),
+            };
+            resolve(fileData);
+
+            // allFilesData.push(fileData);
+          });
+        });
       }
+    })
+  ).then((allFilesData) => {
+    const fields = ["field1", "field2", "field3", "field4"];
+    const csv = parse(allFilesData, {fields});
 
-      readContent(function (err, content) {
-        
- 
-      })
-
-        
-      })
-    }
-
-})
-
-
-    
-
+    console.log(csv);
   });
-
-
-
-
 });
-
+// // console.log(allFilesData);

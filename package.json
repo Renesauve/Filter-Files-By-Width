@@ -9,6 +9,8 @@
   "author": "Rene Sauve",
   "license": "ISC",
   "dependencies": {
-    "glob": "^7.1.6"
+    "cheerio": "^1.0.0-rc.3",
+    "glob": "^7.1.6",
+    "json2csv": "^5.0.3"
   }
 }
