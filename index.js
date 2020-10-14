@@ -3,6 +3,7 @@ const fs = require("fs");
 // const json2xls = require('json2xls');
 const cheerio = require("cheerio");
 const jsonexport = require("jsonexport");
+require('dotenv').config
 
 // const path = require("path");
 // const {json2excel, excel2json} = require("js2excel");
