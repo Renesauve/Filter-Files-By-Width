@@ -10,7 +10,7 @@ const jsonexport = require("jsonexport");
 // const DxfParser = require("dxf-parser");
 // const pcheerio = require('pseudo-cheerio');
 
-const currentPath = "C:/Users/Student2/OneDrive - Electron Metalworks Ltd/Desktop/svgs/SVGS";
+const currentPath = process.env.PATH;
 
 
 
@@ -68,7 +68,7 @@ for ( i=0; i<content.length; i++ )
       
         {
           const oldPath = (currentPath + "/" + content[i][j].filename)
-          const newPath = ("C:/Users/Student2/OneDrive - Electron Metalworks Ltd/Desktop/svgs/NeedsFixedSvgs" + "/" + content[i][j].filename)
+          const newPath = (process.env.NEWPATH + "/" + content[i][j].filename)
         
 
           fs.rename(oldPath, newPath, function (err) {
